@@ -2,31 +2,34 @@
 #include<vexMotor.h>
 vexMotor motorDerecho;
 vexMotor motorIzquierdo;
+vexMotor torreta;
 vexMotor tira;
 vexMotor tilt;
 Servo pan;
 int state;
-
 void setup() {
   // put your setup code here, to run once:
+   pinMode(13, OUTPUT);
  Serial.begin(9600);
 }
-
 void loop() {
   // put your main code here, to run repeatedly:
  if(Serial.available() > 0){     
       state = Serial.read();   
     }
-    
 //    --------------CONTROL POR BLUETOOTH--------------
 //    --------------Adelante--------------------
 if (state == '1'){
       adelante();
+     // for(int i=0; i<255; i++){
+      //digitalWrite(13, HIGH); 
+     // delay(100);
+     //}
     }
       // --------------Atras--------------------
-      
     else if (state == '2'){
       atras();
+      //digitalWrite(13, LOW);
     }
       // --------------Izquierda--------------------
     else if (state == '3'){
@@ -46,19 +49,19 @@ if (state == '1'){
     }
       // --------------Pan Derecha--------------------
       else if (state == '7'){
-      panDerecha();
+      torretaDerecha();
+        //panDerecha();
     }
       // --------------Pan Izquierda--------------------
       else if (state == '8'){
-      panIzquierda();
+      //panIzquierda();
+      torretaIzquierda();
     }
       // --------------Tira--------------------
       else if (state == '9'){
       tirale();
-    }
-     
+    }    
 }
-
 //1
 void adelante(){
 motorDerecho.write(255);
@@ -99,11 +102,15 @@ int p=pan.read();
 if(p>0)
 pan.write(p--);
 }
+
+void torretaIzquierda(){
+////////////////////////
+torreta.write(-20);
+}
+void torretaDerecha(){
+torreta.write(20);
+}
 //9
 void tirale(){
 tira.write(200);
 }
-
-
-
-
