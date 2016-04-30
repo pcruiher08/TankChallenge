@@ -1,116 +1,108 @@
 #include <Servo.h>
 #include<vexMotor.h>
+
 vexMotor motorDerecho;
 vexMotor motorIzquierdo;
 vexMotor torreta;
+vexMotor vertical;
 vexMotor tira;
-vexMotor tilt;
-Servo pan;
-int state;
+
+ int state;
+ int velocidad=200;
+ 
 void setup() {
   // put your setup code here, to run once:
-   pinMode(13, OUTPUT);
- Serial.begin(9600);
+motorDerecho.attach(9);
+  motorIzquierdo.attach(10);
+  torreta.attach(11);
+  vertical.attach(6);
+  tira.attach(5);
+  
+   Serial.begin(9600);
 }
+
 void loop() {
-  // put your main code here, to run repeatedly:
- if(Serial.available() > 0){     
+
+if(Serial.available() > 0){     
       state = Serial.read();   
     }
-//    --------------CONTROL POR BLUETOOTH--------------
-//    --------------Adelante--------------------
-if (state == '1'){
+    if (state == '1'){
       adelante();
-     // for(int i=0; i<255; i++){
-      //digitalWrite(13, HIGH); 
-     // delay(100);
-     //}
+     
     }
       // --------------Atras--------------------
-    else if (state == '2'){
-      atras();
-      //digitalWrite(13, LOW);
+    else if (state == '0'){
+      motorDerecho.write(0);
+      motorIzquierdo.write(0);
+      torreta.write(0);
+ vertical.write(0);
+ tira.write(0);
     }
-      // --------------Izquierda--------------------
-    else if (state == '3'){
-      izquierda();
+    else if(state == '4'){
+    atras();
     }
-      // --------------Derecha--------------------
-    else if (state == '4'){
-      derecha();
+    
+    else if(state == '3'){
+    derecha();
     }
-      // --------------Arriba--------------------
-    else if (state == '5'){
-      arriba();
+    else if(state == '2'){
+    izquierda();
     }
-      // --------------Abajo--------------------
-      else if (state == '6'){
-      abajo();
+    else if(state == '6'){
+    torretaIzquierda();
     }
-      // --------------Pan Derecha--------------------
-      else if (state == '7'){
-      torretaDerecha();
-        //panDerecha();
+    else if(state == '7'){
+    torretaDerecha();
+   // up;
     }
-      // --------------Pan Izquierda--------------------
-      else if (state == '8'){
-      //panIzquierda();
-      torretaIzquierda();
+    else if(state == '5'){
+    up();
     }
-      // --------------Tira--------------------
-      else if (state == '9'){
-      tirale();
-    }    
+    else if(state == '8'){
+    down();
+    }
+    else if(state == '9'){
+    tirale();
+    }
+    
 }
-//1
-void adelante(){
-motorDerecho.write(255);
-motorIzquierdo.write(-255);
+  void adelante(){
+motorDerecho.write(velocidad);
+motorIzquierdo.write(velocidad);
 }
 //2
 void atras(){
-  motorDerecho.write(-255);
-motorIzquierdo.write(255);
+  motorDerecho.write(velocidad*-1);
+motorIzquierdo.write(velocidad*-1);
 }
-//3
-void izquierda(){
-motorDerecho.write(255);
-motorIzquierdo.write(255);
-}
-//4
+
 void derecha(){
-motorDerecho.write(-255);
-motorIzquierdo.write(-255);
+motorDerecho.write(velocidad);
+motorIzquierdo.write(velocidad*-1);
 }
-//5
-void arriba(){
-  tilt.write(20);
-}
-//6
-void abajo(){
-tilt.write(-20);
-}
-//7
-void panDerecha(){
-int p=pan.read();
-if(p<180)
-pan.write(p++);
-}
-//8
-void panIzquierda(){
-int p=pan.read();
-if(p>0)
-pan.write(p--);
+
+void izquierda(){
+motorDerecho.write(velocidad*-1);
+motorIzquierdo.write(velocidad);
 }
 
 void torretaIzquierda(){
-////////////////////////
-torreta.write(-20);
+torreta.write(velocidad/2);
 }
+
 void torretaDerecha(){
-torreta.write(20);
+torreta.write(velocidad/2 *-1);
 }
-//9
+
+void up(){
+vertical.write(velocidad/2);
+}
+
+void down(){
+vertical.write(velocidad/2 *-1);
+}
+
+
 void tirale(){
-tira.write(200);
+tira.write(velocidad);
 }
